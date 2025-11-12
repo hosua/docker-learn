@@ -1,0 +1,6 @@
+{
+  "require": {
+    "psr/log": "3.0.2",
+    "phpmyadmin/phpmyadmin": "5.2.3"
+  }
+}

@@ -1,0 +1,28 @@
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+      # "host_port:container_port"
+    volumes:
+      - ./ports.conf:/etc/apache2/ports.conf
+      - ./src:/var/www/html
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_password 
+    volumes:
+    - pg-data:/var/lib/postgresql
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+volumes:
+  pg-data:
