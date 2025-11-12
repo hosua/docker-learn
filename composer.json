@@ -1,6 +1,5 @@
 {
   "require": {
-    "psr/log": "3.0.2",
-    "phppgadmin/phppgadmin": "dev-master"
+    "psr/log": "3.0.2"
   }
 }
