@@ -12,12 +12,27 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: db_user
-      POSTGRES_PASSWORD: db_password 
+      POSTGRES_DB: my_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin 
     ports:
       - 5432:5432
     volumes:
     - pg-data:/var/lib/postgresql
+    - ./init-db:/docker-entrypoint-initdb.d
+
+  postgrest:
+    image: postgrest/postgrest
+    restart: always
+    environment:
+      PGRST_SERVER_HOST: 0.0.0.0
+      PGRST_DB_URI: postgres://admin:admin@db:5432/my_db
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_OPENAPI_SERVER_PROXY_URI: http://127.0.0.1:3000
+    ports:
+      - 8001:3000
+    depends_on: 
+    - db
 
   adminer:
     image: adminer
