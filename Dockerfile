@@ -5,5 +5,7 @@ RUN --mount=type=bind,source=composer.json,target=composer.json \
 
 FROM php:8.2-apache as final
 WORKDIR /var/www/html
-RUN docker-php-ext-install pdo pdo_mysql
+RUN apt-get update && apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo pdo_pgsql pgsql && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 USER www-data
