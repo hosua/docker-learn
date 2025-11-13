@@ -9,17 +9,19 @@ Db::connect();
 <html lang="en">
     <?php include_once "header.php" ?>
     <body>
-    <h3>click me</h3>
-    <form method="post">
-        <input class="btn btn-primary" type="submit" name="increment" value="<?php echo $_SESSION['counter'] ?>">
+        <h3>click me</h3>
+        <form method="post">
+            <input class="btn btn-primary" type="submit" name="increment" value="<?php echo $_SESSION['counter'] ?>">
         </form>
+
         <?php
         Db::query("SELECT id, name, age FROM people");
-while ($data = Db::fetch_next_object()) {
+while ($data = Db::fetch_next()) {
     echo "{$data->id}. {$data->name}<br>";
 }
 ?>
-  </body>
+
+    </body>
 </html>
 
 <?php

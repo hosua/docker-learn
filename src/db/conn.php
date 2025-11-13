@@ -33,10 +33,10 @@ class Db
 
     public static function num_rows(): int
     {
-        return pg_num_rows(self::$result);
+        return pg_num_rows(self::$res);
     }
 
-    public static function fetch_next_object(): object|bool
+    public static function fetch_next(): object|bool
     {
         return pg_fetch_object(self::$res);
     }
