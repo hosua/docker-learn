@@ -21,6 +21,33 @@ class Db
         return self::$conn;
     }
 
+    public static function executeSQL(string $sql, array $params = []): bool
+    {
+        $conn = self::getConn();
+        $paramValues = [];
+        $paramIndex = 1;
+        $replacements = [];
+
+        foreach ($params as $key => $value) {
+            $placeholder = ':' . $key;
+            $positionalPlaceholder = '$' . $paramIndex;
+            $replacements[$placeholder] = $positionalPlaceholder;
+            $paramValues[] = $value;
+            $paramIndex++;
+        }
+
+        foreach ($replacements as $placeholder => $positionalPlaceholder) {
+            $sql = str_replace($placeholder, $positionalPlaceholder, $sql);
+        }
+
+        self::$res = pg_query_params($conn, $sql, $paramValues);
+        if (!self::$res) {
+            die('Query failed: ' . pg_last_error());
+            return false;
+        }
+        return true;
+    }
+
     public static function query(string $sql): bool
     {
         self::$res = pg_query(self::getConn(), $sql);

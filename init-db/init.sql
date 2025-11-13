@@ -7,7 +7,7 @@ CREATE TABLE public.people (
 
 CREATE TABLE public.chat (
     id integer NOT NULL,
-    "user" character varying(32) NOT NULL,
+    username character varying(32) NOT NULL,
     log character varying(512) NOT NULL,
     ts timestamp without time zone NOT NULL
 );

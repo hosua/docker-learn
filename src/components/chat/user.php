@@ -5,12 +5,12 @@ class User
     private $name;
     public function __construct(string $username)
     {
-        self::$name = $username;
+        $this->name = $username;
     }
 
     public function getName(): string
     {
-        return self::$name;
+        return $this->name;
     }
 
 };
