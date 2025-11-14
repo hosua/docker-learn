@@ -5,6 +5,17 @@ include_once "components/chat/chat.php";
 include_once "components/chat/user.php";
 session_start();
 Db::connect();
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["message"])) {
+    $chat = new Chat();
+    $user = new User("Hosua");
+    $message = $_POST["message"];
+    if (!empty(trim($message))) {
+        $chat->addLog($user, trim($message));
+    }
+    header("Location: " . $_SERVER["PHP_SELF"]);
+    exit;
+}
 ?>
 
 <!doctype html>
@@ -15,13 +26,6 @@ Db::connect();
         Db::query("SELECT id, name, age FROM people");
 $chat = new Chat();
 $user = new User("Hosua");
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["message"])) {
-    $message = $_POST["message"];
-    if (!empty(trim($message))) {
-        $chat->addLog($user, trim($message));
-    }
-}
 
 $chat_logs = $chat->getLogs();
 echo $chat_logs;
