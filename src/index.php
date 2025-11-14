@@ -22,19 +22,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["message"])) {
 <html lang="en">
     <?php include_once "header.php" ?>
     <body>
-        <?php
-        Db::query("SELECT id, name, age FROM people");
-$chat = new Chat();
-$user = new User("Hosua");
-
-$chat_logs = $chat->getLogs();
-echo $chat_logs;
-?>
-        <form method="post" class="d-flex">
-            <input type="text" class="form-control" id="input-text" name="message" required>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-
+        <div class="container mt-3">
+            <?php include_once "components/chat/chat.php"; getChat(); ?>
+            <form method="post" class="d-flex">
+                <input type="text" class="form-control" id="input-text" name="message" required>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
     </body>
 </html>
 

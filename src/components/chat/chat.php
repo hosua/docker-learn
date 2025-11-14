@@ -10,7 +10,7 @@ class Chat
         $username = $user->getName();
         Db::executeSQL(
             "INSERT INTO chat (username, log) VALUES (:username, :log)",
-            ["username" => $username, "log" => $log]
+            ["username" => $username, "log" => $log],
         );
     }
 
@@ -26,3 +26,12 @@ class Chat
         return $result;
     }
 };
+
+function getChat()
+{
+    Db::query("SELECT id, name, age FROM people");
+    $chat = new Chat();
+    $user = new User("Hosua");
+    $chat_logs = $chat->getLogs();
+    echo $chat_logs;
+}
