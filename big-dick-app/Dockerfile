@@ -21,16 +21,17 @@ USER endowed-user
 FROM base AS backend
 COPY --chown=endowed-user:endowed-user app/backend $HOME/backend
 WORKDIR $HOME/backend
-RUN touch /home/endowed-user/.node_repl_history
-RUN npm i
-CMD ["npm", "run", "dev"]
+RUN touch $HOME/.node_repl_history
 
+RUN npm i
+
+CMD ["npm", "run", "dev"]
 
 # frontend setup
 FROM base AS frontend
+USER endowed-user
 COPY --chown=endowed-user:endowed-user app/frontend $HOME/frontend
 WORKDIR $HOME/frontend
 RUN npm i
 
-EXPOSE 8080/tcp
 CMD ["npm", "run", "dev"]

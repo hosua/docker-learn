@@ -1,0 +1,59 @@
+{
+  "uuid": "",
+  "lastMigration": 29,
+  "name": "User Data Mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "routes": [
+    {
+      "uuid": "",
+      "documentation": "Get user data",
+      "method": "get",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "[\r\n  {{#repeat (queryParam 'total' '10')}}\r\n  {\r\n    \"user\": \"{{faker 'internet.userName'}}\",\r\n    \"password\": \"{{faker 'internet.password'}}\",\r\n    \"joined_on\": \"{{faker 'date.past'}}\",\r\n    \"ip_address\": \"{{faker 'internet.ip'}}\",\r\n    \"comment_count\": {{faker 'string.numeric' 3}}\r\n  }\r\n  {{/repeat}}\r\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "application/json" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [],
+  "folders": [],
+  "rootChildren": [{ "type": "route", "uuid": "" }]
+}

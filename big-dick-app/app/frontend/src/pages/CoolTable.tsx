@@ -1,87 +1,118 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import { Button } from "@/components/ui/button";
+
+import { useState } from "react";
+
 const CoolTable = () => {
+  const [tableData, setTableData] = useState<unknown[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMockData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const url = `/mock-api/users`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.statusText}`);
+      }
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        throw new Error(
+          `Expected JSON but got ${contentType}. Response: ${text.substring(0, 100)}`,
+        );
+      }
+      const result = await res.json();
+      if (!Array.isArray(result)) {
+        throw new Error("Response is not an array");
+      }
+      setTableData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSchema = () => {
+    if (!tableData || !Array.isArray(tableData) || tableData.length === 0) {
+      return null;
+    }
+    const firstItem = tableData[0];
+    if (typeof firstItem !== "object" || firstItem === null) {
+      return null;
+    }
+    return Object.keys(firstItem);
+  };
+
+  const formatValue = (value: unknown): string => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  };
+
+  const formatHeader = (key: string): string => {
+    return key
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const schema = getSchema();
+
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+    <div className="space-y-4">
+      <Button onClick={fetchMockData} disabled={loading}>
+        {loading ? "Loading..." : "Fetch Data"}
+      </Button>
+
+      {error && <div className="text-red-500">Error: {error}</div>}
+
+      {schema && tableData && Array.isArray(tableData) && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {schema.map((key) => (
+                <TableHead key={key}>{formatHeader(key)}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableData.map((row, index) => (
+              <TableRow key={index}>
+                {schema.map((key) => (
+                  <TableCell key={key}>
+                    {formatValue(
+                      typeof row === "object" && row !== null
+                        ? (row as Record<string, unknown>)[key]
+                        : null,
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
+      {tableData && !schema && (
+        <div className="text-gray-500">No valid table data structure found</div>
+      )}
+    </div>
   );
 };
 
