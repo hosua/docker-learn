@@ -4,9 +4,10 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get("/api", (req, res) => {
-  console.log("You hit da API bitch");
-  res.send("You hit da API bitch");
+app.get("/api/test", (req, res) => {
+  const message = "You hit da API bitch ass";
+  console.log(message);
+  res.send({ message });
 });
 
 console.log(`Running server on port ${port}...`);

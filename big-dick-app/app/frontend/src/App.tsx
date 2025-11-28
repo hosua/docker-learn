@@ -9,8 +9,9 @@ function App() {
   useEffect(() => {
     const fetchFromApi = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api");
-        console.log(res);
+        const response = await fetch("/api/test");
+        const result = await response.json();
+        console.log(result);
       } catch (e) {
         console.error(e);
       }
@@ -29,7 +30,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <p> hello world!?? </p>
+      <p> hello world!??!! </p>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

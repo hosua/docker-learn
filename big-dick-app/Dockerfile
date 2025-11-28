@@ -23,9 +23,7 @@ COPY --chown=endowed-user:endowed-user app/backend $HOME/backend
 WORKDIR $HOME/backend
 RUN touch /home/endowed-user/.node_repl_history
 RUN npm i
-
-# EXPOSE 42069/tcp
-CMD ["node", "src/server.js"]
+CMD ["npm", "run", "dev"]
 
 
 # frontend setup

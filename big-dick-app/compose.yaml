@@ -7,7 +7,16 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
+
 services:
+  proxy:
+    image: traefik:v3.6
+    command: --providers.docker
+    ports:
+      - 42069:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   backend:
     container_name: big-dick-backend
     build: 
@@ -15,8 +24,6 @@ services:
       target: backend
     tty: true
     stdin_open: true
-    ports:
-      - 42069:3000
     develop:
       watch:
         - path: ./app/backend/src/
@@ -24,16 +31,15 @@ services:
           action: sync
         - path: ./app/backend/package.json
           action: rebuild
+    labels:
+      traefik.http.routers.backend.rule: Host(`localhost`) && PathPrefix(`/api`)
+      traefik.http.services.backend.loadbalancer.server.port: 3000
 
   frontend:
     container_name: big-dick-frontend
     build:
       context: .
       target: frontend
-    ports:
-      - 8080:5173
-    environment:
-      - VITE_HOST=0.0.0.0
     develop:
       watch:
         - path: ./app/frontend/src
@@ -41,6 +47,10 @@ services:
           action: sync
         - path: ./app/frontend/package.json
           action: rebuild
+    labels:
+      traefik.http.routers.client.rule: Host(`localhost`)
+      traefik.http.services.client.loadbalancer.server.port: 5173
+
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the
