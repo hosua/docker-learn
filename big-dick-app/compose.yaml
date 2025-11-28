@@ -47,6 +47,10 @@ services:
           action: sync
         - path: ./app/frontend/package.json
           action: rebuild
+        - path: ./app/frontend/tsconfig.json
+          action: rebuild
+        - path: ./app/frontend/vite.config.ts
+          action: rebuild
     labels:
       traefik.http.routers.client.rule: Host(`localhost`)
       traefik.http.services.client.loadbalancer.server.port: 5173
