@@ -3,6 +3,8 @@ import CoolTable from "./pages/CoolTable";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
+import { ThemeProvider } from "@/components/ui/theme-provider";
+
 function App() {
   const [result, setResult] = useState<null | string>(null);
   const fetchFromApi = async () => {
@@ -18,14 +20,14 @@ function App() {
   };
 
   return (
-    <>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <CoolTable />
       <Button variant="outline" onClick={fetchFromApi}>
         API Test
       </Button>
       <br />
       {result}
-    </>
+    </ThemeProvider>
   );
 }
 
